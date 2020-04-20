@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1062
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinTouchZip", "WinTouchZip\WinTouchZip.csproj", "{1E283F1D-5136-42E3-8812-1738AACC3CCC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1E283F1D-5136-42E3-8812-1738AACC3CCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E283F1D-5136-42E3-8812-1738AACC3CCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E283F1D-5136-42E3-8812-1738AACC3CCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E283F1D-5136-42E3-8812-1738AACC3CCC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {13FA14B6-9E36-4177-970F-DBD394F70E7E}
+	EndGlobalSection
+EndGlobal
