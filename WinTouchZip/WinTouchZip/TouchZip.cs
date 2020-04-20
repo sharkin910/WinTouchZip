@@ -9,71 +9,88 @@ using System.Windows.Forms;
 
 namespace WinTouchZip
 {
-    public static class TouchZip
+    public class TouchZip
     {
-        public static bool AddYMD { get; set; }
+        private bool? setDateToFileName = null;
+        private bool setYes = false;
 
-        public static string Exec(params string[] args)
+        public string Exec(params string[] args)
         {
-            foreach (var zipPath in args)
+            var zipFiles = new List<string>();
+            foreach (var arg in args)
             {
-                if (zipPath == "-ymd" || zipPath == "/ymd")
+                if (arg == "-d" || arg == "/d")
                 {
-                    AddYMD = true;
+                    setDateToFileName = true;
                 }
-            }
-            if (!AddYMD)
-            {
-                DialogResult result = MessageBox.Show("ZIPファイル名に年月日を付与しますか？", "確認",
-                  MessageBoxButtons.YesNo, MessageBoxIcon.Question,
-                  MessageBoxDefaultButton.Button2);
-                if (result == DialogResult.Yes)
+                else if (arg == "-nd" || arg == "/nd")
                 {
-                    AddYMD = true;
+                    setDateToFileName = false;
                 }
-            }
-
-            foreach (var zipPath in args)
-            {
-                if (zipPath == "-ymd" || zipPath == "/ymd")
+                else if (arg == "-y" || arg == "/y")
                 {
+                    setYes = true;
                 }
                 else
                 {
-                    try
+                    zipFiles.Add(arg);
+                }
+            }
+            if (zipFiles.Count == 0) return "";
+
+            if (setDateToFileName == null)
+            {
+                DialogResult res = MessageBox.Show("ZIPファイルの日付をZIP内の最新ファイルの日付に合わせます。\n処理したZIPファイル名に年月日を付与しますか？", "確認",
+                  MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question,
+                  MessageBoxDefaultButton.Button2);
+                if (res == DialogResult.Cancel) return "";
+                setDateToFileName = (res == DialogResult.Yes);
+            }
+
+            DialogResult result = DialogResult.Cancel;
+            if (setYes)
+            {
+                result = DialogResult.Yes;
+            }
+
+            foreach (var zipPath in zipFiles)
+            {
+                try
+                {
+                    DateTime dt = ZipGetLastModifiedFileTime(zipPath, out string lastModifiedFileName);
+                    if (dt != DateTime.MinValue)
                     {
-                        DateTime dt = ZipGetLastModifiedFileTime(zipPath, out string lastModifiedFileName);
-                        if (dt != DateTime.MinValue)
+                        if (!setYes)
                         {
                             string msg = ""
-                                + "ZIPファイル名: " + zipPath + "の日付を\r\n"
-                                + "ZIP内最新ファイル（" + lastModifiedFileName + "）\r\n"
-                                + "のの更新日（" + dt + "）に合わせます。\r\n\r\n"
+                                + "ZIPファイル名「" + zipPath + "」の日付を\r\n"
+                                + "ZIP内最新ファイル「" + lastModifiedFileName + "」\r\n"
+                                + "のの更新日「" + dt + "」に合わせます。\r\n\r\n"
                                 + "実行しますか？";
-                            DialogResult result = MessageBox.Show(msg, "実行確認",
+                            result = MessageBox.Show(msg, "実行確認",
                                           MessageBoxButtons.YesNoCancel, MessageBoxIcon.Error,
                                           MessageBoxDefaultButton.Button2);
-                            if (result == DialogResult.Yes)
+                        }
+                        if (result == DialogResult.Yes)
+                        {
+                            FileInfo fi = new FileInfo(zipPath)
                             {
-                                FileInfo fi = new FileInfo(zipPath)
-                                {
-                                    CreationTime = dt,  // 作成日時
-                                    LastWriteTime = dt, // 更新日時
-                                    LastAccessTime = dt // アクセス日時
-                                };
+                                CreationTime = dt,  // 作成日時
+                                LastWriteTime = dt, // 更新日時
+                                LastAccessTime = dt // アクセス日時
+                            };
 
-                                if (AddYMD) AddModifiedTimeToFileName(zipPath, dt);
-                            }
-                            else if (result == DialogResult.Cancel)
-                            {
-                                return "";
-                            }
+                            if (setDateToFileName == true) AddModifiedTimeToFileName(zipPath, dt);
+                        }
+                        else if (result == DialogResult.Cancel)
+                        {
+                            return "";
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        return ex.Message;
-                    }
+                }
+                catch (Exception ex)
+                {
+                    return ex.Message;
                 }
             }
             return "";

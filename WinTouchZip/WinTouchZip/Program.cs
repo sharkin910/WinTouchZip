@@ -14,7 +14,8 @@ namespace WinTouchZip
         [STAThread]
         static void Main()
         {
-            TouchZip.Exec(Environment.GetCommandLineArgs().Skip(1).ToArray<string>());
+            var touchZip = new TouchZip();
+            touchZip.Exec(Environment.GetCommandLineArgs().Skip(1).ToArray<string>());
             //Application.EnableVisualStyles();
             //Application.SetCompatibleTextRenderingDefault(false);
             //Application.Run(new Form1());
