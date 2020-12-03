@@ -19,11 +19,11 @@ namespace WinTouchZip
             var zipFiles = new List<string>();
             foreach (var arg in args)
             {
-                if (arg == "-d" || arg == "/d")
+                if (arg == "-d" || arg == "-ymd" || arg == "/d")
                 {
                     setDateToFileName = true;
                 }
-                else if (arg == "-nd" || arg == "/nd")
+                else if (arg == "-nd" || arg == "-noymd" || arg == "/nd")
                 {
                     setDateToFileName = false;
                 }
